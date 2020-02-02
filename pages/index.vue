@@ -1,72 +1,58 @@
 <template>
   <div class="container">
-    <div>
-      <logo />
-      <h1 class="title">
-        test-app
-      </h1>
-      <h2 class="subtitle">
-        My beautiful Nuxt.js project
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
+    <div class="user-filters">
+      <input-counter />
+      <filter-gender />
+    </div>
+    <div class="user-cards">
+      <user-card v-for="user in usersData" :key="user.id.value" :item="user" />
     </div>
   </div>
 </template>
-
 <script>
-import Logo from '~/components/Logo.vue'
+import axios from 'axios'
+import UserCard from '~/components/user-card.vue'
+import InputCounter from '~/components/input-counter.vue'
+import FilterGender from '~/components/filter-gender.vue'
 
 export default {
   components: {
-    Logo
+    UserCard,
+    InputCounter,
+    FilterGender
+  },
+  computed: {
+    usersData () {
+      return this.$store.getters.getUsers
+    }
+  },
+  async fetch ({ store, params }) {
+    const { data } = await axios.get('https://randomuser.me/api/?results=20')
+    store.commit('setUsers', data)
   }
 }
 </script>
 
-<style>
+<style lang="scss">
 .container {
+  background: #f9f9f9;
   margin: 0 auto;
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
+  .user-cards {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .user-filters {
+    width: 720px;
+    border: 2px solid cadetblue;
+    padding: 20px 0;
+  }
 }
 
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
 </style>
