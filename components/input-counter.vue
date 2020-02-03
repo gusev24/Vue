@@ -20,7 +20,7 @@
 export default {
   data () {
     return {
-      cardCounter: null,
+      cardCounter: 20,
       required: true,
       errors: []
     }
@@ -33,11 +33,13 @@ export default {
         return
       } else {
         this.clearErrors()
+        this.required = true
       }
       if ((e < 1 || e > 20) && !Number.isInteger(e)) {
         this.errors.push('Incorrect value, an integer from 0 to 20 is required'); this.required = false
       } else {
         this.clearErrors()
+        this.required = true
       }
     },
     clearErrors () { this.errors = [] }

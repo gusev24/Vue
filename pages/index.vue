@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <button @click="getUsers({'a':'lol'})">OK</button>
     <div class="user-filters">
       <input-counter />
       <filter-gender />
@@ -24,6 +25,11 @@ export default {
   computed: {
     usersData () {
       return this.$store.getters.getUsers
+    }
+  },
+  methods: {
+    getUsers (data) {
+      this.$store.commit('setUsers', data)
     }
   },
   async fetch ({ store, params }) {
