@@ -1,12 +1,15 @@
 <template>
   <div class="gender-wrapper">
-    <input type="radio" value="female" id="female" v-model="genderFilter">
+    <input id="female" v-model="genderFilter" type="radio" value="female">
     <label for="female">female</label>
-    <br>
-    <input type="radio" value="male" id="male" v-model="genderFilter">
+    <input id="male" v-model="genderFilter" type="radio" value="male">
     <label for="male">male</label>
-    <br>
-    <input type="radio" value="any" id="any" v-model="genderFilter" checked>
+    <input
+      id="any"
+      v-model="genderFilter"
+      type="radio"
+      value="any"
+      checked />
     <label for="any">any</label>
   </div>
 </template>
@@ -16,6 +19,18 @@ export default {
   data () {
     return {
       genderFilter: 'any'
+    }
+  },
+  methods: {
+    gender () {
+      this.$emit('gender', {
+        'genderFilter': this.genderFilter
+      })
+    }
+  },
+  watch: {
+    genderFilter () {
+      this.gender()
     }
   }
 }

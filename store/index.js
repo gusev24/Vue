@@ -14,6 +14,7 @@ const store = () => new Vuex.Store({
   },
   getters: {
     getUsers (state) {
+      console.log(state.usersList.results)
       return state.usersList.results
     }
   }

@@ -1,9 +1,8 @@
 <template>
   <div class="container">
-    <button @click="getUsers({'a':'lol'})">OK</button>
     <div class="user-filters">
       <input-counter />
-      <filter-gender />
+      <filter-gender @gender="onGender" />
     </div>
     <div class="user-cards">
       <user-card v-for="user in usersData" :key="user.id.value" :item="user" />
@@ -24,17 +23,37 @@ export default {
   },
   computed: {
     usersData () {
+      console.log(123)
       return this.$store.getters.getUsers
-    }
-  },
-  methods: {
-    getUsers (data) {
-      this.$store.commit('setUsers', data)
     }
   },
   async fetch ({ store, params }) {
     const { data } = await axios.get('https://randomuser.me/api/?results=20')
     store.commit('setUsers', data)
+  },
+  methods: {
+    async getUsers (query) {
+      let queryParam = ''
+      if (query) {
+        queryParam = `&${query}`
+      }
+      const url = `https://randomuser.me/api/?results=20` + queryParam
+      const { data } = await axios.get(url)
+      this.$store.commit('setUsers', data)
+    },
+    getUsersByGender (gender) {
+      if (gender && gender !== 'any') {
+        const queryParam = `gender=${gender}`
+        this.getUsers(queryParam)
+      } else {
+        this.getUsers()
+      }
+    },
+    onGender (data) {
+      if (data) {
+        this.getUsersByGender(data.genderFilter)
+      }
+    }
   }
 }
 </script>
