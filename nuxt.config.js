@@ -46,6 +46,7 @@ export default {
   /*
   ** Build configuration
   */
+  router: { base: '/Vue/' },
   build: {
     vendor: ['axios'],
     /*
