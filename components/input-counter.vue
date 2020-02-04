@@ -1,17 +1,21 @@
 <template>
   <div class="input-wrapper">
-    <label for="cards-number">Number of user cards:</label>
+    <label for="cards-number">
+      Number of user cards:
+    </label>
     <input
       id="cards-number"
-      v-model="cardCounter"
-      @input="checkInput(cardCounter)"
-      :class="{ error: !cardCounter || errors.length }"
+      v-model="cardsCounter"
+      @input="checkInput(cardsCounter)"
+      :class="{ error: !cardsCounter || errors.length }"
       type="number"
       min="1"
       max="20"
     >
-    <div v-if="errors.length > 0" class="input-wrapper__error-message" >
-      <p v-for="error in errors" :key="error">{{ error }}</p>
+    <div v-if="errors.length > 0" class="input-wrapper__error-message">
+      <p v-for="error in errors" :key="error">
+        {{ error }}
+      </p>
     </div>
   </div>
 </template>
@@ -20,7 +24,7 @@
 export default {
   data () {
     return {
-      cardCounter: 20,
+      cardsCounter: 20,
       required: true,
       errors: []
     }
@@ -41,8 +45,16 @@ export default {
         this.clearErrors()
         this.required = true
       }
+      this.counter()
     },
-    clearErrors () { this.errors = [] }
+    clearErrors () { this.errors = [] },
+    counter () {
+      if (this.required) {
+        this.$emit('counter', {
+          'cardsCounter': this.cardsCounter
+        })
+      }
+    }
   }
 }
 

@@ -9,7 +9,8 @@
       v-model="genderFilter"
       type="radio"
       value="any"
-      checked />
+      checked
+    >
     <label for="any">any</label>
   </div>
 </template>
@@ -21,16 +22,16 @@ export default {
       genderFilter: 'any'
     }
   },
+  watch: {
+    genderFilter () {
+      this.gender()
+    }
+  },
   methods: {
     gender () {
       this.$emit('gender', {
         'genderFilter': this.genderFilter
       })
-    }
-  },
-  watch: {
-    genderFilter () {
-      this.gender()
     }
   }
 }

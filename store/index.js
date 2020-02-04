@@ -5,17 +5,16 @@ Vue.use(Vuex)
 
 const store = () => new Vuex.Store({
   state: {
-    usersList: {}
+    usersList: []
   },
   mutations: {
     setUsers (state, data) {
-      state.usersList = data
+      state.usersList = data.results
     }
   },
   getters: {
     getUsers (state) {
-      console.log(state.usersList.results)
-      return state.usersList.results
+      return state.usersList
     }
   }
 })

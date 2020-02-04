@@ -1,12 +1,15 @@
 <template>
   <div class="container">
     <div class="user-filters">
-      <input-counter />
+      <input-counter @counter="onCounter" />
       <filter-gender @gender="onGender" />
     </div>
     <div class="user-cards">
-      <user-card v-for="user in usersData" :key="user.id.value" :item="user" />
+      <user-card v-for="user in usersData" :key="user.login.uuid" :item="user" />
     </div>
+    <button @click="downloadMore(10)" class="download-more">
+      Download more +10
+    </button>
   </div>
 </template>
 <script>
@@ -21,38 +24,50 @@ export default {
     InputCounter,
     FilterGender
   },
+  data () {
+    return {
+      countValue: 20,
+      gender: 'any'
+    }
+  },
   computed: {
     usersData () {
-      console.log(123)
       return this.$store.getters.getUsers
     }
   },
   async fetch ({ store, params }) {
-    const { data } = await axios.get('https://randomuser.me/api/?results=20')
+    const { data } = await axios.get(`https://randomuser.me/api/?results=20`)
     store.commit('setUsers', data)
   },
   methods: {
-    async getUsers (query) {
-      let queryParam = ''
-      if (query) {
-        queryParam = `&${query}`
-      }
-      const url = `https://randomuser.me/api/?results=20` + queryParam
+    async getUsers () {
+      const queryParam = this.getQueryByGender(this.gender)
+      const url = `https://randomuser.me/api/?results=${this.countValue}` + queryParam
       const { data } = await axios.get(url)
       this.$store.commit('setUsers', data)
     },
-    getUsersByGender (gender) {
-      if (gender && gender !== 'any') {
-        const queryParam = `gender=${gender}`
-        this.getUsers(queryParam)
+    getQueryByGender () {
+      if (this.gender && this.gender !== 'any') {
+        return `&gender=${this.gender}`
       } else {
-        this.getUsers()
+        return ''
       }
     },
     onGender (data) {
       if (data) {
-        this.getUsersByGender(data.genderFilter)
+        this.gender = data.genderFilter
+        this.getUsers()
       }
+    },
+    onCounter (data) {
+      if (data) {
+        this.countValue = +data.cardsCounter
+        this.getUsers()
+      }
+    },
+    downloadMore (count) {
+      this.countValue += count
+      this.getUsers()
     }
   }
 }
@@ -77,6 +92,13 @@ export default {
     width: 720px;
     border: 2px solid cadetblue;
     padding: 20px 0;
+  }
+  .download-more {
+    padding: 20px;
+    background: #f9f9f9;
+    color: #83ba43;
+    font-weight: 600;
+    font-size: 16px;
   }
 }
 
